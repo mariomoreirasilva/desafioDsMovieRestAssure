@@ -86,6 +86,23 @@ public class ScoreControllerRA {
 	}
 	
 	@Test
-	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {		
+	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {	
+		
+		putScoreInstance.put("movieId", "");
+		JSONObject putnovoScore = new JSONObject(putScoreInstance);
+		
+		given()
+			.header("Content-type", "application/json")
+			.header("Authorization", "Bearer " + adminToken)
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.body(putnovoScore)
+		.when()
+		.put("/scores")
+		.then()
+			.statusCode(422)
+			.body("error", equalTo("Dados inválidos"))
+			.body("status", equalTo(422))
+			.body("errors.message[0]", equalTo("Score should be greater than or equal to zero"));
 	}
 }
